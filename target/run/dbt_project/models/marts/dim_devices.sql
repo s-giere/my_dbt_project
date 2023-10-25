@@ -1,9 +1,9 @@
 
-  create or replace   view dbt_dev_db.marts.dim_devices
+  create or replace   view analytics.marts.dim_devices
   
    as (
     select
   *
-from dbt_dev_db.staging.stg_devices
+from analytics.staging.stg_devices
   );
 

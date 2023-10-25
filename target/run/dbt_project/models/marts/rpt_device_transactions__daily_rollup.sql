@@ -1,37 +1,51 @@
--- back compat for old kwarg name
+
   
-  begin;
-    
-        
-            
-                
-                
-            
-                
-                
-            
-        
     
 
-    
+        create or replace transient table analytics.marts.rpt_device_transactions__daily_rollup
+         as
+        (
 
-    merge into dbt_dev_db.marts.rpt_device_transactions__daily_rollup as DBT_INTERNAL_DEST
-        using dbt_dev_db.marts.rpt_device_transactions__daily_rollup__dbt_tmp as DBT_INTERNAL_SOURCE
-        on (
-                    DBT_INTERNAL_SOURCE.device_id = DBT_INTERNAL_DEST.device_id
-                ) and (
-                    DBT_INTERNAL_SOURCE.transaction_date = DBT_INTERNAL_DEST.transaction_date
-                )
+with
 
-    
-    when matched then update set
-        "DEVICE_ID" = DBT_INTERNAL_SOURCE."DEVICE_ID","DEVICE_TYPE" = DBT_INTERNAL_SOURCE."DEVICE_TYPE","STORE_ID" = DBT_INTERNAL_SOURCE."STORE_ID","STORE_NAME" = DBT_INTERNAL_SOURCE."STORE_NAME","STORE_TYPOLOGY" = DBT_INTERNAL_SOURCE."STORE_TYPOLOGY","STORE_COUNTRY" = DBT_INTERNAL_SOURCE."STORE_COUNTRY","TRANSACTION_DATE" = DBT_INTERNAL_SOURCE."TRANSACTION_DATE","TRANSACTION_ACCEPTED__AMOUNT" = DBT_INTERNAL_SOURCE."TRANSACTION_ACCEPTED__AMOUNT","TRANSACTION_ACCEPTED__COUNT" = DBT_INTERNAL_SOURCE."TRANSACTION_ACCEPTED__COUNT"
-    
+device_transactions_agg as (
 
-    when not matched then insert
-        ("DEVICE_ID", "DEVICE_TYPE", "STORE_ID", "STORE_NAME", "STORE_TYPOLOGY", "STORE_COUNTRY", "TRANSACTION_DATE", "TRANSACTION_ACCEPTED__AMOUNT", "TRANSACTION_ACCEPTED__COUNT")
-    values
-        ("DEVICE_ID", "DEVICE_TYPE", "STORE_ID", "STORE_NAME", "STORE_TYPOLOGY", "STORE_COUNTRY", "TRANSACTION_DATE", "TRANSACTION_ACCEPTED__AMOUNT", "TRANSACTION_ACCEPTED__COUNT")
+select
+    device_id,
+    transaction_date,
+    sum(case when status = 'accepted' then amount end) as transaction_accepted__amount,
+    sum(case when status = 'accepted' then 1 end) as transaction_accepted__count
 
-;
-    commit;
+from analytics.marts.fct_transactions as t
+
+
+
+group by 1, 2
+
+),
+
+final as (
+
+select
+    t.device_id,
+    d.device_type,
+    s.store_id,
+    s.store_name,
+    s.store_typology,
+    s.store_country,
+    t.transaction_date,
+    t.transaction_accepted__amount,
+    t.transaction_accepted__count
+
+from device_transactions_agg as t
+left join analytics.marts.dim_devices as d
+    on t.device_id = d.device_id
+left join analytics.marts.dim_stores as s
+    on d.store_id = s.store_id
+
+)
+
+select * from final
+        );
+      
+  

@@ -1,3 +1,3 @@
 select
   *
-from dbt_dev_db.staging.stg_transactions as t
+from analytics.staging.stg_transactions as t

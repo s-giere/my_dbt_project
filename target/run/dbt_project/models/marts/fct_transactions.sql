@@ -1,9 +1,9 @@
 
-  create or replace   view dbt_dev_db.marts.fct_transactions
+  create or replace   view analytics.marts.fct_transactions
   
    as (
     select
   *
-from dbt_dev_db.staging.stg_transactions as t
+from analytics.staging.stg_transactions as t
   );
 

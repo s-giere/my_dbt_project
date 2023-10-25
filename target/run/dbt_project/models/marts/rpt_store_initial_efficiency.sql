@@ -2,7 +2,7 @@
   
     
 
-        create or replace transient table dbt_dev_db.marts.rpt_store_initial_efficiency
+        create or replace transient table analytics.marts.rpt_store_initial_efficiency
          as
         (
 
@@ -14,7 +14,7 @@ select
 	store_id,
 	transaction_at,
 	lag(transaction_at) over (partition by store_id order by transaction_at) as lag_transaction_at
-from dbt_dev_db.intermediate.int_first_5_store_transactions
+from analytics.intermediate.int_first_5_store_transactions
 
 ),
 

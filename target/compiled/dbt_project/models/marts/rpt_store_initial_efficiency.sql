@@ -8,7 +8,7 @@ select
 	store_id,
 	transaction_at,
 	lag(transaction_at) over (partition by store_id order by transaction_at) as lag_transaction_at
-from dbt_dev_db.intermediate.int_first_5_store_transactions
+from analytics.intermediate.int_first_5_store_transactions
 
 ),
 

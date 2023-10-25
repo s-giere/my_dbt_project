@@ -1,5 +1,5 @@
 
-  create or replace   view dbt_dev_db.staging.stg_stores
+  create or replace   view analytics.staging.stg_stores
   
    as (
     select
