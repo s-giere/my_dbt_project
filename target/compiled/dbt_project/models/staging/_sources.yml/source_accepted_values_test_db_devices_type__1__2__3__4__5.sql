@@ -1,0 +1,22 @@
+
+    
+    
+
+with all_values as (
+
+    select
+        type as value_field,
+        count(*) as n_records
+
+    from test_db.source_data.devices
+    group by type
+
+)
+
+select *
+from all_values
+where value_field not in (
+    '1','2','3','4','5'
+)
+
+

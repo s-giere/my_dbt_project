@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: rpt_device_transactions__daily_rollup
+    description: >
+      Aggregated table includes such KPIs as number and the toal amount of the
+      accepted transactions per device ID and per transaction date.
+      Primary key is the combination of device_id and transaction_date.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - device_id
+            - transaction_date
+    columns:
+      - name: device_id
+        description: Id of the device that was used to perform the transaction
+      - name: transaction_date
+        description: Date when the transaction happened
+      - name: transaction_accepted__count
+        description: Number of accepted transactions per device_id and transaction_date
+      - name: transaction_accepted__amount
+        description: >
+          Total amount (in euro) of accepted transactions per device_id and transaction_date

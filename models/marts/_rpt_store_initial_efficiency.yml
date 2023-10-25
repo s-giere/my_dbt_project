@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: rpt_store_initial_efficiency
+    description: >
+      Aggregated table describes the efficiency of the stores based on their
+      first 5 accepted transactions. THe efficiency KPI is the average time
+      between the first subsequent transactions.
+    columns:
+      - name: store_id
+        description: Id of the store where the transaction was performed
+        tests:
+          - not_null
+          - unique
+      - name: has_at_least_5_accepted_transactions
+        description: >
+          Value is true if the store handled at least 5 accepted transactions.
+          Otherwise the value is false.
+      - name: avg_time_minutes_first_5_transactions
+        description: >
+          Average time in minutes between the first 5 accepted
+          transcations, i.e. average of time between 1st and 2nd, 2nd and 3rd,
+          3rd and 4th, 4th and 5th transactions. If the value is null then the
+          store has only one accepted transaction at all.

@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: stg_devices
+    description: >
+      Table with all devices. Those devices are hardware needed to perform any
+      kind of transactions, each of them is tied up to a specific store.
+      One record per device.
+    columns:
+      - name: device_id
+        description: Unique identifier for a device
+      - name: device_type
+        description: Device type which can have values from 1 to 5.
+      - name: store_id
+        description: Id of the store that the device is uniquely tied to.

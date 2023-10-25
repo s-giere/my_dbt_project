@@ -1,0 +1,104 @@
+version: 2
+
+sources:
+  - name: test_db
+    database: test_db
+    schema: source_data
+    tables:
+      - name: devices
+        description: >
+          Table with all devices. Those devices are hardware needed to perform any
+          kind of transactions, each of them is tied up to a specific store.
+          One record per device.
+        columns:
+          - name: id
+            description: Unique identifier for a device
+            tests:
+              - unique
+              - not_null
+          - name: type
+            description: Device type which can have values from 1 to 5.
+            tests:
+              - not_null
+              - accepted_values:
+                  values: [1, 2, 3, 4, 5]
+          - name: store_id
+            description: Id of the store that the device is uniquely tied to.
+            tests:
+              - not_null
+              - relationships:
+                  to: source('source_data', 'stores')
+                  field: id
+      - name: stores
+        description: >
+          Table with all stores. Each store is tied up to a specific customer.
+          Each customer might have multiple stores.
+        columns:
+          - name: id
+            description: Unique identifier for a store
+            tests:
+              - unique
+              - not_null
+          - name: name
+            description: Name of the store
+            tests:
+              - not_null
+          - name: typology
+            description: Describes the type of the store
+            tests:
+              - not_null
+          - name: address
+            description: Physical address of the store
+            tests:
+              - not_null
+          - name: city
+            description: City where the store is located
+            tests:
+              - not_null
+          - name: country
+            description: Country where the store is located
+            tests:
+              - not_null
+          - name: customer_id
+            description: Id of the customer that the store is uniquely tied to
+            tests:
+              - not_null
+      - name: transactions
+        description: >
+          Event-like table with all transactions. A transaction is a payment
+          made using the provided devices. Those transactions are made to pay for
+          products sold inside the store. Only transactions per card and in euro are
+          included in the table. Accepted, refused and cancelled transactions are
+          stored in the table.
+        columns:
+          - name: id
+            description: Unique identifier for a transaction
+            tests:
+              - unique
+              - not_null
+          - name: device_id
+            description: Id of the device that was used for handle the transaction
+            tests:
+              - not_null
+              - relationships:
+                  to: source('source_data', 'devices')
+                  field: id
+          - name: status
+            description: >
+              The status of the transaction, which can be accepted, refused or cancelled
+            tests:
+              - accepted_values:
+                  values: ['accepted', 'refused', 'cancelled']
+          - name: amount
+            description: >
+              The total amount of the transaction in euro cents, which
+              should be a positive number.
+            tests:
+              - not_null
+              - dbt_utils.accepted_range:
+                  min_value: 0
+                  inclusive: false
+          - name: happened_at
+            description: The timestamp when the transaction happened
+            tests:
+              - not_null

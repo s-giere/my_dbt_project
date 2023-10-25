@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: >
+      Event-like table with all transactions (records are not being updated, only inserted).
+      A transaction is a payment made using the provided devices. Those
+      transactions are made to pay for products sold inside the store. Only
+      transactions per card and in euro are included in the table.
+      Accepted, refused and cancelled transactions are stored in the table.
+    columns:
+      - name: transaction_id
+        description: Unique identifier for a transaction
+      - name: device_id
+        description: Id of the device that was used for handle the transaction
+      - name: status
+        description: >
+          The status of the transaction, which can be accepted, refused or cancelled
+      - name: amount_cents
+        description: The total amount of the transaction in euro cents
+      - name: amount
+        description: The total amount of the transaction in euro
+      - name: transaction_at
+        description: The timestamp when the transaction happened
+      - name: transaction_date
+        description: Date when the transaction happened

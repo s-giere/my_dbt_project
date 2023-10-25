@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: int_first_5_store_transactions
+    description: >
+      Table contains the first five accepted transactions per store ID based on the
+      timestamp when the transaction happened (in ascending order).
+      Those transactions might be handled by different devices.
+    columns:
+      - name: store_id
+        description: Id of the store where the transaction was performed
+        tests:
+          - not_null
+      - name: transaction_id
+        description: Id of the transaction. Only accepted transactions are included.
+        tests:
+          - not_null
+          - unique
+      - name: transaction_at
+        description: Timestamp when the transaction happened
+      - name: transaction_order
+        description: >
+          Ordered number of the accepted transaction per store based on the
+          timestamp when the transaction happened (in ascending order). Only the
+          first 5 transactions are kept, i.e. transaction_order <= 5. Transactions
+          with transaction_order > 5 are filtered out to keep the table smaller for
+          further transformations.
+        tests:
+          - not_null
