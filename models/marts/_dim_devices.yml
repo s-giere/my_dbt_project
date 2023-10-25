@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: _dim_devices
+  - name: dim_devices
     description: >
       Table with all devices. Those devices are hardware needed to perform any
       kind of transactions, each of them is tied up to a specific store.
