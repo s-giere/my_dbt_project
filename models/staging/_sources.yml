@@ -27,7 +27,7 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('source_data', 'stores')
+                  to: source('test_db', 'stores')
                   field: id
       - name: stores
         description: >
@@ -81,7 +81,7 @@ sources:
             tests:
               - not_null
               - relationships:
-                  to: source('source_data', 'devices')
+                  to: source('test_db', 'devices')
                   field: id
           - name: status
             description: >
