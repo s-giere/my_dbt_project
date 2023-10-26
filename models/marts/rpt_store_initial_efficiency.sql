@@ -25,7 +25,8 @@ select
 		when count(*) = 5 then true
 		else false
 	end as has_at_least_5_accepted_transactions,
-	avg(timestampdiff('minute', transaction_at, lag_transaction_at)) as avg_time_minutes_first_5_transactions
+	avg(timestampdiff('minute', transaction_at, lag_transaction_at)) as avg_time_minutes_first_5_transactions,
+    avg(timestampdiff('minute', transaction_at, lag_transaction_at)) as test_field
 from lag_timestamp_calc
 group by 1
 
