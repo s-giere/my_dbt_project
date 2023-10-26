@@ -11,7 +11,6 @@ lag_timestamp_calc as (
 select
 	store_id,
 	transaction_at,
-    transaction_order,
 	lag(transaction_at) over (partition by store_id order by transaction_at) as lag_transaction_at
 from {{ ref('int_first_5_store_transactions') }}
 
@@ -21,7 +20,6 @@ final as (
 
 select
 	store_id,
-    max(transaction_order) as n_accepted_transactions,
 
 	case
 		when count(*) = 5 then true
